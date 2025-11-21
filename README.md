@@ -4,7 +4,7 @@ A full-stack web application for discovering, rating, and reviewing movies. Buil
 
 ## Features
 
-- 🔍 **Advanced Search** - Search movies by title, genre, year, director, actor, and minimum rating
+- **Advanced Search** - Search movies by title, genre, year, director, actor, and minimum rating
 - **Movie Ratings** - View IMDb ratings and user ratings
 - **Reviews & Comments** - Read and write movie reviews with community comments
 - **Watchlists** - Create and manage personal watchlists
