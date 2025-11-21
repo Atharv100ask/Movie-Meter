@@ -1,18 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MovieModal from './MovieModal';
 
 function MovieCard({ movie }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [posterSrc, setPosterSrc] = useState('/image-placeholder.png');
+
+  useEffect(() => {
+    // Reset to placeholder when movie changes
+    setPosterSrc('/image-placeholder.png');
+
+    // Check if poster URL exists and is not 'N/A'
+    if (!movie.poster || movie.poster === 'N/A') {
+      return;
+    }
+
+    // Preload and validate the image
+    const img = new Image();
+    img.onload = () => {
+      setPosterSrc(movie.poster);
+    };
+    img.onerror = () => {
+      setPosterSrc('/image-placeholder.png');
+    };
+    img.src = movie.poster;
+  }, [movie.poster]);
 
   return (
     <>
-      <div className="bg-[#2f3136] rounded-lg shadow-xl overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#202225]">
+      <div className="bg-[#2f3136] rounded-lg shadow-xl overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#202225] flex flex-col">
         <img
-          src={movie.poster || 'https://via.placeholder.com/300x450?text=No+Poster'}
+          src={posterSrc}
           alt={movie.title}
-          className="w-full h-64 object-cover"
+          className="w-full h-auto object-contain bg-[#202225]"
         />
-        <div className="p-4">
+        <div className="p-4 flex flex-col flex-grow">
           <h3 className="text-xl font-bold text-white mb-2 line-clamp-1">
             {movie.title}
           </h3>
@@ -42,7 +63,7 @@ function MovieCard({ movie }) {
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="w-full bg-[#5865f2] text-white py-2 rounded-full hover:bg-[#4752c4] transition-colors font-semibold shadow-lg"
+            className="w-full bg-[#5865f2] text-white py-2 rounded-full hover:bg-[#4752c4] transition-colors font-semibold shadow-lg mt-auto"
           >
             View Details
           </button>

@@ -1,4 +1,28 @@
+import { useState, useEffect } from 'react';
+
 function MovieModal({ movie, isOpen, onClose }) {
+  const [posterSrc, setPosterSrc] = useState('/image-placeholder.png');
+
+  useEffect(() => {
+    // Reset to placeholder when movie changes
+    setPosterSrc('/image-placeholder.png');
+
+    // Check if poster URL exists and is not 'N/A'
+    if (!movie.poster || movie.poster === 'N/A') {
+      return;
+    }
+
+    // Preload and validate the image
+    const img = new Image();
+    img.onload = () => {
+      setPosterSrc(movie.poster);
+    };
+    img.onerror = () => {
+      setPosterSrc('/image-placeholder.png');
+    };
+    img.src = movie.poster;
+  }, [movie.poster]);
+
   if (!isOpen) return null;
 
   return (
@@ -20,21 +44,17 @@ function MovieModal({ movie, isOpen, onClose }) {
           </svg>
         </button>
 
-        <div className="flex flex-col md:flex-row">
-          {/* Movie Poster */}
+        <div className="flex flex-col md:flex-row p-4 md:p-6">
+          {/* Movie Poster and Info */}
           <div className="md:w-1/3">
             <img
-              src={movie.poster || 'https://via.placeholder.com/300x450?text=No+Poster'}
+              src={posterSrc}
               alt={movie.title}
-              className="w-full h-auto object-cover rounded-t-lg md:rounded-l-lg md:rounded-tr-none"
+              className="w-full h-auto object-cover rounded-lg"
             />
-          </div>
-
-          {/* Movie Details */}
-          <div className="md:w-2/3 p-6 space-y-4">
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-2">{movie.title}</h2>
-              <div className="flex items-center gap-3 flex-wrap">
+            {/* Year, Runtime, Rating below poster */}
+            <div className="p-4 space-y-3">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-sm text-gray-400 bg-[#40444b] px-3 py-1 rounded-full">
                   {movie.year}
                 </span>
@@ -48,17 +68,37 @@ function MovieModal({ movie, isOpen, onClose }) {
                     {movie.runtime}
                   </span>
                 )}
-                {movie.imdb_rating && (
-                  <div className="flex items-center bg-[#40444b] px-3 py-1 rounded-full">
-                    <svg className="w-5 h-5 text-[#faa61a] fill-current" viewBox="0 0 20 20">
-                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                    </svg>
-                    <span className="ml-1 text-sm font-semibold text-white">
-                      {movie.imdb_rating}/10
-                    </span>
-                  </div>
-                )}
               </div>
+              {movie.imdb_rating && (
+                <div className="flex items-center bg-[#40444b] px-3 py-1 rounded-full w-fit">
+                  <svg className="w-5 h-5 text-[#faa61a] fill-current" viewBox="0 0 20 20">
+                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                  </svg>
+                  <span className="ml-1 text-sm font-semibold text-white">
+                    {movie.imdb_rating}/10
+                  </span>
+                </div>
+              )}
+              {/* IMDb Link */}
+              {movie.imdb_id && (
+                <div>
+                  <a
+                    href={`https://www.imdb.com/title/${movie.imdb_id}/`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-[#5865f2] text-white px-6 py-2 rounded-full font-semibold hover:bg-[#4752c4] transition-colors w-full text-center"
+                  >
+                    View on IMDb
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Movie Details */}
+          <div className="md:w-2/3 p-6 space-y-4">
+            <div>
+              <h2 className="text-3xl font-bold text-white mb-2">{movie.title}</h2>
             </div>
 
             {/* Plot */}
@@ -139,20 +179,6 @@ function MovieModal({ movie, isOpen, onClose }) {
               <div>
                 <h3 className="text-lg font-semibold text-[#5865f2] mb-2">Box Office</h3>
                 <p className="text-gray-300">{movie.box_office}</p>
-              </div>
-            )}
-
-            {/* IMDb Link */}
-            {movie.imdb_id && (
-              <div className="pt-4">
-                <a
-                  href={`https://www.imdb.com/title/${movie.imdb_id}/`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block bg-[#5865f2] text-white px-6 py-2 rounded-full font-semibold hover:bg-[#4752c4] transition-colors"
-                >
-                  View on IMDb
-                </a>
               </div>
             )}
           </div>

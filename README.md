@@ -5,12 +5,12 @@ A full-stack web application for discovering, rating, and reviewing movies. Buil
 ## Features
 
 - 🔍 **Advanced Search** - Search movies by title, genre, year, director, actor, and minimum rating
-- ⭐ **Movie Ratings** - View IMDb ratings and user ratings
-- 📝 **Reviews & Comments** - Read and write movie reviews with community comments
-- 📚 **Watchlists** - Create and manage personal watchlists
-- 🎨 **Modern UI** - Discord-inspired dark theme with smooth animations
-- 📱 **Responsive Design** - Works seamlessly on desktop, tablet, and mobile devices
-- 🎯 **Movie Details Modal** - View comprehensive movie information in a beautiful popup
+- **Movie Ratings** - View IMDb ratings and user ratings
+- **Reviews & Comments** - Read and write movie reviews with community comments
+- **Watchlists** - Create and manage personal watchlists
+- **Modern UI** - Discord-inspired dark theme with smooth animations
+- **Responsive Design** - Works seamlessly on desktop, tablet, and mobile devices
+- **Movie Details Modal** - View comprehensive movie information in a beautiful popup
 
 ## Tech Stack
 
@@ -238,4 +238,3 @@ This project is created for educational purposes as part of CS 480 coursework.
 
 - Movie data powered by [OMDb API](http://www.omdbapi.com/)
 - UI inspired by Discord's design system
-- Built with ❤️ by the Movie Meter Team
