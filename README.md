@@ -237,4 +237,3 @@ This project is created for educational purposes as part of CS 480 coursework.
 ## Credits
 
 - Movie data powered by [OMDb API](http://www.omdbapi.com/)
-- UI inspired by Discord's design system

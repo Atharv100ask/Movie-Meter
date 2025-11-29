@@ -9,9 +9,6 @@ node_modules/
 .env.test.local
 .env.production.local
 
-# Database (optional - include if you don't want to share it)
-# movie_meter.db
-
 # Build outputs
 dist/
 build/
@@ -51,7 +48,7 @@ coverage/
 *.temp
 .cache/
 
-# SQLite journal files
-*.db-journal
-*.db-wal
-*.db-shm
+# SQLite journal files (but keeping main .db file)
+# *.db-journal
+# *.db-wal
+# *.db-shm
