@@ -245,10 +245,6 @@ The database comes pre-populated with:
 - Verify Google OAuth credentials are set in backend `.env`
 - Check that redirect URIs match in Google Console
 
-## Contributing
-
-This is a CS 480 class project. For any issues or suggestions, please contact the development team.
-
 ## License
 
 This project is created for educational purposes as part of CS 480 coursework.
