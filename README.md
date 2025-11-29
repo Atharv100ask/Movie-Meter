@@ -4,10 +4,11 @@ A full-stack web application for discovering, rating, and reviewing movies. Buil
 
 ## Features
 
+- **Google OAuth Login** - Secure authentication with Google accounts
+- **Personal Favorites** - Save your favorite movies with one click
+- **Movie Reviews** - Write detailed reviews and rate movies 1-10
 - **Advanced Search** - Search movies by title, genre, year, director, actor, and minimum rating
 - **Movie Ratings** - View IMDb ratings and user ratings
-- **Reviews & Comments** - Read and write movie reviews with community comments
-- **Watchlists** - Create and manage personal watchlists
 - **Modern UI** - Discord-inspired dark theme with smooth animations
 - **Responsive Design** - Works seamlessly on desktop, tablet, and mobile devices
 - **Movie Details Modal** - View comprehensive movie information in a beautiful popup
@@ -16,22 +17,25 @@ A full-stack web application for discovering, rating, and reviewing movies. Buil
 
 ### Frontend
 - **React** - UI library
+- **React Router** - Client-side routing
 - **Vite** - Build tool and dev server
 - **TailwindCSS** - Utility-first CSS framework
-- **Axios** - HTTP client
 
 ### Backend
 - **Node.js** - Runtime environment
 - **Express** - Web framework
+- **Passport.js** - Authentication middleware
+- **Google OAuth 2.0** - User authentication
 - **SQLite3** - Database (better-sqlite3)
 - **OMDb API** - Movie data source
 
 ## Database Schema
 
-The application uses a fully normalized relational database with:
-- **Core Tables**: Users, Movies, Genres, Directors, Actors, Writers
-- **Junction Tables**: Movie-Genres, Movie-Directors, Movie-Actors, Movie-Writers, Movie-Ratings
-- **User Features**: User Ratings, Reviews, Comments, Recommendations, Watchlists
+The application uses a SQLite database with:
+- **Movies Table**: Movie information and metadata
+- **Ratings Table**: External ratings (IMDb, Rotten Tomatoes, etc.)
+- **Users Table**: User accounts (via Google OAuth)
+- **Favorites Table**: User's favorite movies with reviews and ratings
 
 ## Prerequisites
 
@@ -58,21 +62,13 @@ cd movie-meter-backend
 
 # Install dependencies
 npm install
-
-# Create .env file with your OMDb API key
-echo "OMDB_API_KEY=your_api_key_here" > .env
-echo "PORT=3001" >> .env
-
-# The database is already populated with 715+ movies
-# If you need to reseed, run:
-npm run seed
 ```
 
-**Get your FREE OMDb API Key:**
-1. Visit [http://www.omdbapi.com/apikey.aspx](http://www.omdbapi.com/apikey.aspx)
-2. Enter your email and select "FREE" (1,000 daily requests)
-3. Verify your email
-4. Copy the API key to your `.env` file
+**Configuration:**
+- The `.env` file is already configured with Google OAuth credentials
+- OMDb API key is included
+- Database is already populated with 715+ movies
+- User/favorites tables will be automatically created on first run
 
 ### 3. Frontend Setup
 
@@ -83,6 +79,9 @@ cd movie-meter-frontend
 # Install dependencies
 npm install
 ```
+
+**Configuration:**
+- The `.env` file is already configured to connect to the backend
 
 ## Running the Application
 
@@ -151,6 +150,19 @@ ClassProjectMovie/
 - `POST /api/movies/fetch` - Fetch and save movie from OMDb
 - `DELETE /api/movies/:imdbId` - Delete movie
 
+### Authentication
+- `GET /api/auth/google` - Initiate Google OAuth login
+- `GET /api/auth/google/callback` - OAuth callback endpoint
+- `POST /api/auth/logout` - Logout current user
+- `GET /api/auth/me` - Get current user info
+
+### Favorites
+- `GET /api/favorites` - Get user's favorite movies (requires auth)
+- `POST /api/favorites` - Add movie to favorites (requires auth)
+- `PUT /api/favorites/:id` - Update review/rating (requires auth)
+- `DELETE /api/favorites/:id` - Remove from favorites (requires auth)
+- `GET /api/favorites/check/:movieId` - Check if movie is favorited (requires auth)
+
 ## Available Scripts
 
 ### Backend
@@ -176,6 +188,21 @@ ClassProjectMovie/
    - Actor name
 3. Click "Search Movies" or "Reset" to clear filters
 
+### User Authentication
+1. Click "Sign in with Google" in the header
+2. Authorize the app with your Google account
+3. Your profile picture and name will appear in the header
+4. You can now save favorites and write reviews
+
+### Managing Favorites
+1. **Add to favorites**: Click the star icon on any movie card
+2. **View favorites**: Click the "Favorites" button in the header
+3. **Write a review**:
+   - Go to your Favorites page
+   - Click "Add Review" on any movie
+   - Rate it 1-10 and write your thoughts
+4. **Edit/Remove**: Update reviews or remove movies from favorites anytime
+
 ### Viewing Movie Details
 1. Click the "View Details" button on any movie card
 2. A modal will popup showing:
@@ -188,22 +215,9 @@ ClassProjectMovie/
 ## Database Information
 
 The database comes pre-populated with:
-- **715 movies** from various genres
-- **27 genres** (Action, Drama, Comedy, Horror, etc.)
-- **573 directors**
-- **1,578 actors**
-- **968 writers**
-- **5 sample users** with ratings and reviews
-
-## Features Coming Soon
-
-- User authentication and profiles
-- Add movies to personal watchlists
-- Write and edit reviews
-- Comment on reviews
-- Movie recommendations
-- Filter by multiple genres
-- Sort by rating, year, or popularity
+- **715+ movies** from various genres and years
+- Comprehensive movie metadata (cast, crew, ratings, etc.)
+- User and favorites tables (created automatically on first run)
 
 ## Troubleshooting
 
@@ -225,6 +239,11 @@ The database comes pre-populated with:
 ### CORS errors
 - Make sure both frontend and backend are running
 - Backend should have CORS enabled (already configured)
+
+### Authentication issues
+- See [GOOGLE_AUTH_SETUP.md](./GOOGLE_AUTH_SETUP.md) for complete troubleshooting
+- Verify Google OAuth credentials are set in backend `.env`
+- Check that redirect URIs match in Google Console
 
 ## Contributing
 
