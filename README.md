@@ -103,7 +103,7 @@ cd movie-meter-frontend
 npm run dev
 ```
 
-The frontend will start on `http://localhost:5173` (or another port if 5173 is in use)
+The frontend will start on `http://localhost:5178` (or another port if 5178 is in use)
 
 ### Access the Application
 
