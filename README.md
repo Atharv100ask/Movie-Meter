@@ -91,6 +91,7 @@ You'll need **two terminal windows** to run both servers:
 
 ```bash
 cd movie-meter-backend
+npm rebuild better-sqlite3
 npm start
 ```
 

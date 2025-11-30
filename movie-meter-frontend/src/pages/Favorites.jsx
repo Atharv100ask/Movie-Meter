@@ -1,8 +1,78 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFavorites } from '../hooks/useFavorites';
 import { useAuth } from '../context/AuthContext';
 import ReviewModal from '../components/ReviewModal';
+
+function FavoriteMovieCard({ favorite, onReview, onRemove }) {
+  const [posterSrc, setPosterSrc] = useState('/image-placeholder.png');
+
+  useEffect(() => {
+    // Reset to placeholder
+    setPosterSrc('/image-placeholder.png');
+
+    // Check if poster URL exists and is not 'N/A'
+    if (!favorite.poster || favorite.poster === 'N/A') {
+      return;
+    }
+
+    // Preload and validate the image
+    const img = new Image();
+    img.onload = () => {
+      setPosterSrc(favorite.poster);
+    };
+    img.onerror = () => {
+      setPosterSrc('/image-placeholder.png');
+    };
+    img.src = favorite.poster;
+  }, [favorite.poster]);
+
+  return (
+    <div className="bg-[#2f3136] rounded-lg overflow-hidden hover:shadow-xl transition-shadow">
+      <div className="relative">
+        <img
+          src={posterSrc}
+          alt={favorite.title}
+          className="w-full h-80 object-cover"
+        />
+        <div className="absolute top-2 right-2 bg-black/70 px-2 py-1 rounded text-yellow-400 font-bold">
+          ⭐ {favorite.imdb_rating || 'N/A'}
+        </div>
+      </div>
+
+      <div className="p-4">
+        <h3 className="text-xl font-bold text-white mb-1">{favorite.title}</h3>
+        <p className="text-gray-400 text-sm mb-3">{favorite.year}</p>
+
+        {favorite.review && (
+          <div className="mb-3 p-3 bg-[#202225] rounded">
+            <p className="text-sm text-gray-300 italic">&ldquo;{favorite.review}&rdquo;</p>
+            {favorite.rating && (
+              <p className="text-xs text-yellow-400 mt-2">
+                Your rating: {favorite.rating}/10
+              </p>
+            )}
+          </div>
+        )}
+
+        <div className="flex gap-2 mt-4">
+          <button
+            onClick={() => onReview(favorite)}
+            className="flex-1 px-4 py-2 bg-[#5865f2] hover:bg-[#4752c4] text-white rounded transition-colors font-medium"
+          >
+            {favorite.review ? 'Edit Review' : 'Add Review'}
+          </button>
+          <button
+            onClick={() => onRemove(favorite.id)}
+            className="px-4 py-2 bg-[#ed4245] hover:bg-[#c03537] text-white rounded transition-colors font-medium"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function Favorites() {
   const navigate = useNavigate();
@@ -87,52 +157,12 @@ function Favorites() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {favorites.map((favorite) => (
-            <div
+            <FavoriteMovieCard
               key={favorite.id}
-              className="bg-[#2f3136] rounded-lg overflow-hidden hover:shadow-xl transition-shadow"
-            >
-              <div className="relative">
-                <img
-                  src={favorite.poster !== 'N/A' ? favorite.poster : '/placeholder-movie.png'}
-                  alt={favorite.title}
-                  className="w-full h-80 object-cover"
-                />
-                <div className="absolute top-2 right-2 bg-black/70 px-2 py-1 rounded text-yellow-400 font-bold">
-                  ⭐ {favorite.imdb_rating || 'N/A'}
-                </div>
-              </div>
-
-              <div className="p-4">
-                <h3 className="text-xl font-bold text-white mb-1">{favorite.title}</h3>
-                <p className="text-gray-400 text-sm mb-3">{favorite.year}</p>
-
-                {favorite.review && (
-                  <div className="mb-3 p-3 bg-[#202225] rounded">
-                    <p className="text-sm text-gray-300 italic">&ldquo;{favorite.review}&rdquo;</p>
-                    {favorite.rating && (
-                      <p className="text-xs text-yellow-400 mt-2">
-                        Your rating: {favorite.rating}/10
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                <div className="flex gap-2 mt-4">
-                  <button
-                    onClick={() => handleReview(favorite)}
-                    className="flex-1 px-4 py-2 bg-[#5865f2] hover:bg-[#4752c4] text-white rounded transition-colors font-medium"
-                  >
-                    {favorite.review ? 'Edit Review' : 'Add Review'}
-                  </button>
-                  <button
-                    onClick={() => handleRemove(favorite.id)}
-                    className="px-4 py-2 bg-[#ed4245] hover:bg-[#c03537] text-white rounded transition-colors font-medium"
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
-            </div>
+              favorite={favorite}
+              onReview={handleReview}
+              onRemove={handleRemove}
+            />
           ))}
         </div>
       )}
