@@ -41,8 +41,11 @@ coverage/
 *.temp
 .cache/
 
+.env
+*/.env
 movie-meter-backend/.env
-node_modules/
+movie-meter-frontend/.env
+
 # Keep .env files for private team repo
 # Keep database files
 # Keep all assets and images
